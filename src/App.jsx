@@ -63,6 +63,9 @@ function App() {
         {gameWon ? 'New Game' : 'Roll'}
       </button>
       { gameWon && <Confetti /> }
+      <div aria-live="polite" className="sr-only">
+        {gameWon && <p>Congratulations! You won! Press "New Game" to start again.</p>}
+      </div>
     </main>
   );
 }
