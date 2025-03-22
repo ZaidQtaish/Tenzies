@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Die from "./components/Die.jsx";
+import { useWindowSize } from 'react-use'
 import Confetti from 'react-confetti';
 
 function App() {
-  const [dice, setDice] = useState(generateAllNewDice());
+  const [dice, setDice] = useState(() => generateAllNewDice());
 
   // check if the game is won
   const gameWon = dice.every(die => die.isHeld) &&
@@ -23,11 +24,13 @@ function App() {
   }
 
   function rollDice() {
-    setDice((oldDice) =>
-      oldDice.map((die) =>
-        die.isHeld ? die : { ...die, value: Math.ceil(Math.random() * 6) }
-      )
-    );
+      if (!gameWon){
+      setDice((oldDice) =>
+        oldDice.map((die) =>
+          die.isHeld ? die : { ...die, value: Math.ceil(Math.random() * 6) }
+        ));
+      } else 
+        setDice(generateAllNewDice())
   }
 
   function hold(id) {
@@ -50,7 +53,6 @@ function App() {
 
   return (
     <main>
-      {gameWon && <Confetti />}
       <h1 className="title">Tenzies</h1>
       <p className="instructions">
         Roll until all dice are the same. Click each die to freeze it at its
@@ -60,6 +62,7 @@ function App() {
       <button id="roll" onClick={rollDice}>
         {gameWon ? 'New Game' : 'Roll'}
       </button>
+      { gameWon && <Confetti /> }
     </main>
   );
 }
